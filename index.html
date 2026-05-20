@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎓 Curriculum Architect — Kaplan International Pathways ANZ</title>
+  <style>
+    :root {
+      --kaplan-blue: #003087;
+      --kaplan-blue-dark: #002766;
+      --white: #ffffff;
+      --bg-soft: #f3f7ff;
+      --text: #10243e;
+      --border: #d9e4ff;
+      --card-blue: #e8eef7;
+      --shadow: 0 10px 28px rgba(0, 48, 135, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #f8fbff 0%, #edf4ff 100%);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--kaplan-blue);
+      color: var(--white);
+      padding: 1rem 1.5rem 0.95rem;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.24rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .tagline {
+      margin-top: 0.35rem;
+      font-size: 0.88rem;
+      opacity: 0.92;
+      line-height: 1.35;
+    }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: minmax(330px, 38%) 1fr;
+      gap: 1rem;
+      padding: 1rem;
+      height: calc(100vh - 95px);
+    }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-header {
+      background: rgba(0, 48, 135, 0.05);
+      color: var(--kaplan-blue);
+      font-weight: 700;
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-body {
+      padding: 1rem;
+      overflow: auto;
+      height: 100%;
+    }
+
+    form { display: grid; gap: 0.9rem; }
+
+    label {
+      font-weight: 600;
+      font-size: 0.92rem;
+      display: block;
+      margin-bottom: 0.35rem;
+      color: var(--kaplan-blue);
+    }
+
+    input, textarea, select, button {
+      width: 100%;
+      font: inherit;
+      border-radius: 10px;
+    }
+
+    input, textarea, select {
+      border: 1px solid #bfd0fb;
+      border-left: 1px solid #bfd0fb;
+      padding: 0.65rem 0.7rem;
+      background: #fff;
+      color: var(--text);
+      transition: border-left 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-left: 4px solid var(--kaplan-blue);
+      box-shadow: 0 0 0 2px rgba(0, 48, 135, 0.08);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    .row-hidden { display: none; }
+
+    .btn {
+      border: none;
+      background: var(--kaplan-blue);
+      color: var(--white);
+      font-weight: 700;
+      padding: 1rem 1rem;
+      cursor: pointer;
+      transition: transform 0.1s ease, opacity 0.2s ease, background 0.2s ease;
+      font-size: 1rem;
+    }
+
+    .btn:hover { background: var(--kaplan-blue-dark); }
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .actions {
+      display: grid;
+      gap: 0.65rem;
+      margin-top: 0.2rem;
+    }
+
+    .generate-btn {
+      width: 100%;
+      padding: 1.05rem 1rem;
+      font-size: 1.05rem;
+    }
+
+    .muted {
+      color: #4d6384;
+      font-size: 0.88rem;
+      line-height: 1.35;
+    }
+
+    #output {
+      display: grid;
+      gap: 0.8rem;
+      min-height: 300px;
+    }
+
+    .output-card {
+      background: var(--card-blue);
+      border-radius: 12px;
+      border: 1px solid #d4deef;
+      padding: 0.95rem 1rem;
+    }
+
+    .output-card h2, .output-card h3, .output-card h4 {
+      color: var(--kaplan-blue);
+      margin-top: 0;
+      margin-bottom: 0.45rem;
+    }
+
+    .output-card h2 { font-size: 1.2rem; }
+    .output-card h3 { font-size: 1.05rem; }
+    .output-card p { margin: 0.45rem 0; line-height: 1.5; }
+    .output-card ul, .output-card ol { padding-left: 1.2rem; margin: 0.5rem 0; }
+    .output-card li { margin: 0.35rem 0; }
+
+    .loading-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 260px;
+      gap: 0.8rem;
+      color: var(--kaplan-blue);
+      font-weight: 600;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #c9d9f8;
+      border-top-color: var(--kaplan-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .status {
+      margin-top: 0.35rem;
+      font-size: 0.86rem;
+      color: #2f4f7e;
+    }
+
+    @media (max-width: 980px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+      .panel { min-height: 420px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎓 Curriculum Architect — Kaplan International Pathways ANZ</h1>
+    <p class="tagline">AI-powered curriculum development built on evidence-based learning design</p>
+  </header>
+
+  <main class="app-shell">
+    <section class="panel">
+      <div class="panel-header">Curriculum Input</div>
+      <div class="panel-body">
+        <form id="curriculumForm">
+          <div>
+            <label for="subjectName">📚 Subject Name</label>
+            <input id="subjectName" name="subjectName" type="text" required placeholder="e.g., BUS101 Foundations of Business" />
+          </div>
+
+          <div>
+            <label for="learningOutcomes">🎯 Learning Outcomes</label>
+            <textarea id="learningOutcomes" name="learningOutcomes" required placeholder="Enter outcomes, one per line or numbered list..."></textarea>
+          </div>
+
+          <div>
+            <label for="weeklyTopics">📅 Weekly Topics</label>
+            <textarea id="weeklyTopics" name="weeklyTopics" required placeholder="List weekly topics or sequence of modules..."></textarea>
+          </div>
+
+          <div>
+            <label for="assessmentTasks">📝 Assessment Tasks</label>
+            <textarea id="assessmentTasks" name="assessmentTasks" required placeholder="Describe major tasks, weightings, timing, and format..."></textarea>
+          </div>
+
+          <div>
+            <label for="artefactType">⚙️ Artefact Type</label>
+            <select id="artefactType" name="artefactType" required>
+              <option value="Curriculum Map">Curriculum Map</option>
+              <option value="Weekly Lesson Plan">Weekly Lesson Plan</option>
+              <option value="Assessment Task Brief">Assessment Task Brief</option>
+              <option value="Assessment Rubric">Assessment Rubric</option>
+              <option value="GSS Mapping Table">GSS Mapping Table</option>
+              <option value="Reflection Prompts">Reflection Prompts</option>
+            </select>
+          </div>
+
+          <div id="weekRow" class="row-hidden">
+            <label for="weekNumber">📌 Week Number</label>
+            <input id="weekNumber" name="weekNumber" type="number" min="1" placeholder="Enter week number" />
+          </div>
+
+          <div class="actions">
+            <button id="generateBtn" type="submit" class="btn generate-btn">Generate</button>
+            <button id="downloadBtn" type="button" class="btn" disabled>Download as Word Doc</button>
+          </div>
+          <p class="muted">API key must be available server-side in <code>OPENAI_API_KEY</code>. This file expects a local endpoint at <code>/api/generate</code> that injects the key securely.</p>
+          <p id="status" class="status"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">Generated Artefact</div>
+      <div class="panel-body">
+        <article id="output">
+          <div class="output-card">
+            <h2>Ready to Generate</h2>
+            <p>Fill out the form and click <strong>Generate</strong> to create a structured curriculum artefact.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const SYSTEM_PROMPT = 'You are Curriculum Architect, an AI-powered curriculum development system built exclusively for Kaplan International Pathways ANZ. You design complete, mapped, assessed, and pedagogically grounded curriculum built on four principles: 1) Real challenge before content, 2) Authentic audience and real stakes, 3) Voice and choice, 4) Reflection makes learning visible. Always map outputs to the 7 Graduate Success Skills: Critical Thinking, Collaboration, Communication, Digital Literacy, Intercultural Understanding, Professional Expertise, Personal Development. Never produce generic content. Always structure output with clear headings and sections. At the end of every artefact, include a References section suggesting 3-5 relevant open access sources, Google Scholar search terms, or government reports relevant to the topic. Do not reproduce copyrighted content. Suggest sources by title and where to find them only.';
+
+    const form = document.getElementById('curriculumForm');
+    const artefactType = document.getElementById('artefactType');
+    const weekRow = document.getElementById('weekRow');
+    const weekNumber = document.getElementById('weekNumber');
+    const output = document.getElementById('output');
+    const statusEl = document.getElementById('status');
+    const generateBtn = document.getElementById('generateBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    let latestHtml = '';
+
+    function toggleWeekField() {
+      const needsWeek = ['Weekly Lesson Plan', 'Reflection Prompts'].includes(artefactType.value);
+      weekRow.style.display = needsWeek ? 'block' : 'none';
+      weekNumber.required = needsWeek;
+      if (!needsWeek) weekNumber.value = '';
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;');
+    }
+
+    function ensureReferencesSection(markdown, subjectName) {
+      if (/^##?\s*references\b/im.test(markdown)) return markdown;
+      return `${markdown.trim()}\n\n## References\n- Google Scholar search: "${subjectName} pedagogy"\n- Open textbook directory search: OER Commons / OpenStax for "${subjectName}"\n- Government/agency report search: Australian Department of Education + "${subjectName}"\n- UNESCO digital library search related to "${subjectName}"\n- Creative Commons resource search for "${subjectName}" teaching materials`;
+    }
+
+    function markdownToCardHtml(markdown) {
+      const sections = markdown
+        .split(/\n(?=#{1,4}\s+)/g)
+        .map((s) => s.trim())
+        .filter(Boolean);
+
+      if (!sections.length) return '<div class="output-card"><p>No content generated.</p></div>';
+
+      return sections.map((section) => {
+        const lines = section.split('\n');
+        let inner = '';
+        let inList = false;
+
+        for (const rawLine of lines) {
+          const line = rawLine.trim();
+          if (!line) {
+            if (inList) { inner += '</ul>'; inList = false; }
+            continue;
+          }
+
+          if (/^###\s+/.test(line)) {
+            if (inList) { inner += '</ul>'; inList = false; }
+            inner += `<h4>${escapeHtml(line.replace(/^###\s+/, ''))}</h4>`;
+          } else if (/^##\s+/.test(line)) {
+            if (inList) { inner += '</ul>'; inList = false; }
+            inner += `<h3>${escapeHtml(line.replace(/^##\s+/, ''))}</h3>`;
+          } else if (/^#\s+/.test(line)) {
+            if (inList) { inner += '</ul>'; inList = false; }
+            inner += `<h2>${escapeHtml(line.replace(/^#\s+/, ''))}</h2>`;
+          } else if (/^[-*]\s+/.test(line)) {
+            if (!inList) { inner += '<ul>'; inList = true; }
+            inner += `<li>${escapeHtml(line.replace(/^[-*]\s+/, ''))}</li>`;
+          } else {
+            if (inList) { inner += '</ul>'; inList = false; }
+            inner += `<p>${escapeHtml(line)}</p>`;
+          }
+        }
+
+        if (inList) inner += '</ul>';
+        return `<section class="output-card">${inner}</section>`;
+      }).join('');
+    }
+
+    function showLoading() {
+      output.innerHTML = `
+        <div class="loading-wrap">
+          <div class="spinner" aria-hidden="true"></div>
+          <p>Building your curriculum artefact...</p>
+        </div>
+      `;
+    }
+
+    async function generateArtefact(payload) {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'gpt-4o',
+          systemPrompt: SYSTEM_PROMPT,
+          ...payload
+        })
+      });
+
+      if (!response.ok) {
+        const err = await response.text();
+        throw new Error(err || 'Generation failed.');
+      }
+
+      return response.json();
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      statusEl.textContent = 'Generating curriculum artefact...';
+      showLoading();
+      generateBtn.disabled = true;
+      downloadBtn.disabled = true;
+
+      const formData = new FormData(form);
+      const payload = Object.fromEntries(formData.entries());
+      if (!payload.weekNumber) delete payload.weekNumber;
+
+      const userPrompt = `Create a ${payload.artefactType} for the following details.\n\nSubject Name:\n${payload.subjectName}\n\nLearning Outcomes:\n${payload.learningOutcomes}\n\nWeekly Topics:\n${payload.weeklyTopics}\n\nAssessment Tasks:\n${payload.assessmentTasks}${payload.weekNumber ? `\n\nWeek Number:\n${payload.weekNumber}` : ''}\n\nReturn a polished, implementation-ready artefact in markdown with clear headings and sections.`;
+
+      try {
+        const data = await generateArtefact({ userPrompt });
+        const text = data.output || data.content || data.text || 'No content generated.';
+        const withRefs = ensureReferencesSection(text, payload.subjectName || 'the subject');
+        latestHtml = markdownToCardHtml(withRefs);
+        output.innerHTML = latestHtml;
+        statusEl.textContent = 'Generation complete.';
+        downloadBtn.disabled = false;
+      } catch (error) {
+        output.innerHTML = '<section class="output-card"><h2>Generation Error</h2><p>Unable to generate artefact. Check API endpoint and key setup.</p></section>';
+        statusEl.textContent = `Error: ${error.message}`;
+      } finally {
+        generateBtn.disabled = false;
+      }
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      if (!latestHtml) return;
+      const doc = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Curriculum Artefact</title></head><body>${latestHtml}</body></html>`;
+      const blob = new Blob(['\ufeff', doc], { type: 'application/msword' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'curriculum-artefact.doc';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    artefactType.addEventListener('change', toggleWeekField);
+    toggleWeekField();
+  </script>
+</body>
+</html>
