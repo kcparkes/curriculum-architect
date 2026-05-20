@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Curriculum Architect — Kaplan International Pathways ANZ</title>
+  <style>
+    :root {
+      --kaplan-blue: #003087;
+      --white: #ffffff;
+      --bg-soft: #f3f7ff;
+      --text: #10243e;
+      --border: #d9e4ff;
+      --shadow: 0 10px 28px rgba(0, 48, 135, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #f8fbff 0%, #edf4ff 100%);
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--kaplan-blue);
+      color: var(--white);
+      padding: 1.1rem 1.5rem;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: minmax(330px, 38%) 1fr;
+      gap: 1rem;
+      padding: 1rem;
+      height: calc(100vh - 70px);
+    }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-header {
+      background: rgba(0, 48, 135, 0.05);
+      color: var(--kaplan-blue);
+      font-weight: 700;
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-body {
+      padding: 1rem;
+      overflow: auto;
+      height: 100%;
+    }
+
+    form { display: grid; gap: 0.9rem; }
+
+    label {
+      font-weight: 600;
+      font-size: 0.92rem;
+      display: block;
+      margin-bottom: 0.35rem;
+      color: var(--kaplan-blue);
+    }
+
+    input, textarea, select, button {
+      width: 100%;
+      font: inherit;
+      border-radius: 10px;
+    }
+
+    input, textarea, select {
+      border: 1px solid #bfd0fb;
+      padding: 0.65rem 0.7rem;
+      background: #fff;
+      color: var(--text);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    .row-hidden { display: none; }
+
+    .btn {
+      border: none;
+      background: var(--kaplan-blue);
+      color: var(--white);
+      font-weight: 700;
+      padding: 0.75rem 0.95rem;
+      cursor: pointer;
+      transition: transform 0.1s ease, opacity 0.2s ease;
+    }
+
+    .btn:hover { opacity: 0.92; }
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .actions {
+      display: grid;
+      gap: 0.6rem;
+      margin-top: 0.2rem;
+    }
+
+    .muted {
+      color: #4d6384;
+      font-size: 0.88rem;
+      line-height: 1.35;
+    }
+
+    #output {
+      background: #fbfdff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      min-height: 300px;
+    }
+
+    #output h2, #output h3, #output h4 {
+      color: var(--kaplan-blue);
+      margin-top: 1.15rem;
+      margin-bottom: 0.45rem;
+    }
+
+    #output h2 { font-size: 1.3rem; border-bottom: 2px solid #d6e4ff; padding-bottom: 0.35rem; }
+    #output h3 { font-size: 1.08rem; }
+    #output p { margin: 0.5rem 0; line-height: 1.5; }
+    #output ul, #output ol { padding-left: 1.3rem; }
+    #output li { margin: 0.35rem 0; }
+
+    .status {
+      margin-top: 0.5rem;
+      font-size: 0.86rem;
+      color: #2f4f7e;
+    }
+
+    @media (max-width: 980px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+      .panel { min-height: 420px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Curriculum Architect — Kaplan International Pathways ANZ</h1>
+  </header>
+
+  <main class="app-shell">
+    <section class="panel">
+      <div class="panel-header">Curriculum Input</div>
+      <div class="panel-body">
+        <form id="curriculumForm">
+          <div>
+            <label for="subjectName">Subject Name</label>
+            <input id="subjectName" name="subjectName" type="text" required placeholder="e.g., BUS101 Foundations of Business" />
+          </div>
+
+          <div>
+            <label for="learningOutcomes">Learning Outcomes</label>
+            <textarea id="learningOutcomes" name="learningOutcomes" required placeholder="Enter outcomes, one per line or numbered list..."></textarea>
+          </div>
+
+          <div>
+            <label for="weeklyTopics">Weekly Topics</label>
+            <textarea id="weeklyTopics" name="weeklyTopics" required placeholder="List weekly topics or sequence of modules..."></textarea>
+          </div>
+
+          <div>
+            <label for="assessmentTasks">Assessment Tasks</label>
+            <textarea id="assessmentTasks" name="assessmentTasks" required placeholder="Describe major tasks, weightings, timing, and format..."></textarea>
+          </div>
+
+          <div>
+            <label for="artefactType">Artefact Type</label>
+            <select id="artefactType" name="artefactType" required>
+              <option value="Curriculum Map">Curriculum Map</option>
+              <option value="Weekly Lesson Plan">Weekly Lesson Plan</option>
+              <option value="Assessment Task Brief">Assessment Task Brief</option>
+              <option value="Assessment Rubric">Assessment Rubric</option>
+              <option value="GSS Mapping Table">GSS Mapping Table</option>
+              <option value="Reflection Prompts">Reflection Prompts</option>
+            </select>
+          </div>
+
+          <div id="weekRow" class="row-hidden">
+            <label for="weekNumber">Week Number</label>
+            <input id="weekNumber" name="weekNumber" type="number" min="1" placeholder="Enter week number" />
+          </div>
+
+          <div class="actions">
+            <button id="generateBtn" type="submit" class="btn">Generate</button>
+            <button id="downloadBtn" type="button" class="btn" disabled>Download as Word Doc</button>
+          </div>
+          <p class="muted">API key must be available server-side in <code>OPENAI_API_KEY</code>. This file expects a local endpoint at <code>/api/generate</code> that injects the key securely.</p>
+          <p id="status" class="status"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">Generated Artefact</div>
+      <div class="panel-body">
+        <article id="output">
+          <h2>Ready to Generate</h2>
+          <p>Fill out the form and click <strong>Generate</strong> to create a structured curriculum artefact.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const SYSTEM_PROMPT = 'You are Curriculum Architect, an AI-powered curriculum development system built exclusively for Kaplan International Pathways ANZ. You design complete, mapped, assessed, and pedagogically grounded curriculum built on four principles: 1) Real challenge before content, 2) Authentic audience and real stakes, 3) Voice and choice, 4) Reflection makes learning visible. Always map outputs to the 7 Graduate Success Skills: Critical Thinking, Collaboration, Communication, Digital Literacy, Intercultural Understanding, Professional Expertise, Personal Development. Never produce generic content. Always structure output with clear headings and sections.';
+
+    const form = document.getElementById('curriculumForm');
+    const artefactType = document.getElementById('artefactType');
+    const weekRow = document.getElementById('weekRow');
+    const weekNumber = document.getElementById('weekNumber');
+    const output = document.getElementById('output');
+    const statusEl = document.getElementById('status');
+    const generateBtn = document.getElementById('generateBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    let latestHtml = '';
+
+    function toggleWeekField() {
+      const needsWeek = ['Weekly Lesson Plan', 'Reflection Prompts'].includes(artefactType.value);
+      weekRow.style.display = needsWeek ? 'block' : 'none';
+      weekNumber.required = needsWeek;
+      if (!needsWeek) weekNumber.value = '';
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;');
+    }
+
+    function markdownToHtml(markdown) {
+      const lines = markdown.split('\n');
+      let html = '';
+      let inList = false;
+
+      for (const rawLine of lines) {
+        const line = rawLine.trim();
+        if (!line) {
+          if (inList) { html += '</ul>'; inList = false; }
+          continue;
+        }
+
+        if (/^###\s+/.test(line)) {
+          if (inList) { html += '</ul>'; inList = false; }
+          html += `<h4>${escapeHtml(line.replace(/^###\s+/, ''))}</h4>`;
+        } else if (/^##\s+/.test(line)) {
+          if (inList) { html += '</ul>'; inList = false; }
+          html += `<h3>${escapeHtml(line.replace(/^##\s+/, ''))}</h3>`;
+        } else if (/^#\s+/.test(line)) {
+          if (inList) { html += '</ul>'; inList = false; }
+          html += `<h2>${escapeHtml(line.replace(/^#\s+/, ''))}</h2>`;
+        } else if (/^[-*]\s+/.test(line)) {
+          if (!inList) { html += '<ul>'; inList = true; }
+          html += `<li>${escapeHtml(line.replace(/^[-*]\s+/, ''))}</li>`;
+        } else {
+          if (inList) { html += '</ul>'; inList = false; }
+          html += `<p>${escapeHtml(line)}</p>`;
+        }
+      }
+
+      if (inList) html += '</ul>';
+      return html || '<p>No content generated.</p>';
+    }
+
+    async function generateArtefact(payload) {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'gpt-4o',
+          systemPrompt: SYSTEM_PROMPT,
+          ...payload
+        })
+      });
+
+      if (!response.ok) {
+        const err = await response.text();
+        throw new Error(err || 'Generation failed.');
+      }
+
+      return response.json();
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      statusEl.textContent = 'Generating curriculum artefact...';
+      generateBtn.disabled = true;
+      downloadBtn.disabled = true;
+
+      const formData = new FormData(form);
+      const payload = Object.fromEntries(formData.entries());
+      if (!payload.weekNumber) delete payload.weekNumber;
+
+      const userPrompt = `Create a ${payload.artefactType} for the following details.\n\nSubject Name:\n${payload.subjectName}\n\nLearning Outcomes:\n${payload.learningOutcomes}\n\nWeekly Topics:\n${payload.weeklyTopics}\n\nAssessment Tasks:\n${payload.assessmentTasks}${payload.weekNumber ? `\n\nWeek Number:\n${payload.weekNumber}` : ''}\n\nReturn a polished, implementation-ready artefact in markdown with clear headings and sections.`;
+
+      try {
+        const data = await generateArtefact({ userPrompt });
+        const text = data.output || data.content || data.text || 'No content generated.';
+        latestHtml = markdownToHtml(text);
+        output.innerHTML = latestHtml;
+        statusEl.textContent = 'Generation complete.';
+        downloadBtn.disabled = false;
+      } catch (error) {
+        output.innerHTML = '<h2>Generation Error</h2><p>Unable to generate artefact. Check API endpoint and key setup.</p>';
+        statusEl.textContent = `Error: ${error.message}`;
+      } finally {
+        generateBtn.disabled = false;
+      }
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      if (!latestHtml) return;
+      const doc = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Curriculum Artefact</title></head><body>${latestHtml}</body></html>`;
+      const blob = new Blob(['\ufeff', doc], { type: 'application/msword' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'curriculum-artefact.doc';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    artefactType.addEventListener('change', toggleWeekField);
+    toggleWeekField();
+  </script>
+</body>
+</html>
